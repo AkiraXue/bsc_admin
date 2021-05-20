@@ -4,10 +4,29 @@ import { Modal } from "antd";
 import { getToken } from "@/utils/auth";
 import { logout } from "@/store/actions";
 
+const baseUrl = "https://api.akiraxue.com";
+
 //创建一个axios示例
 const service = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API, // api 的 base_url
-  timeout: 5000, // request timeout
+  //baseURL: process.env.REACT_APP_BASE_API, // api 的 base_url
+  baseURL: baseUrl,
+  timeout: 5000, // request timeout,
+  method: "POST",
+  headers: {
+    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,HEAD,DELETE,PUT",
+    "Access-Control-Allow-Headers": "Access-Control-*, Origin, X-Requested-With, Content-Type, Accept",
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Max-Age": 300,
+    "Access-Control-Allow-Credentials" : true,
+    "Allow": "OPTIONS,POST,GET,HEAD,DELETE,PUT",
+  },
+  withCredentials: true,
+  proxy: {
+    host: "http://localhost",
+    port: 3000,
+    protocol: "http"
+  }
 });
 
 // 请求拦截器
@@ -66,7 +85,7 @@ service.interceptors.response.use(
   (error) => {
     console.log("err" + error); // for debug
     const { status } = error.response;
-    if (status === 403) {
+    if (status == 403) {
       Modal.confirm({
         title: "确定登出?",
         content:
