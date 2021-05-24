@@ -11,11 +11,11 @@ import {
   message,
   Select
 } from "antd";
-import { tableList, deleteItem, editItem } from "@/api/activity";
+import { tableList, deleteItem, editItem } from "@/api/item";
 import EditForm from "./forms/editForm"
 const { Column } = Table;
 const { Panel } = Collapse;
-class ActicityComponent extends Component {
+class ItemComponent extends Component {
   _isMounted = false; // 这个变量是用来标志当前组件是否挂载
   state = {
     list: [],
@@ -25,17 +25,24 @@ class ActicityComponent extends Component {
       page: 1,
       limit: 10,
       name: "",
-      state:""
+      nickname: "",
+      mobile: "",
+      state: 1,
     },
     editModalVisible: false,
     editModalLoading: false,
     currentRowData: {
       id: 0,
       name: "",
-      code: "",
-      days: 0,
-      start_date: "",
-      end_date: "",
+      account_id: "",
+      session_key: "",
+      openid: "",
+      unionid: "",
+      nickname: "",
+      birthday: "",
+      phone: "",
+      mobile: "",
+      register_time: "",
       state: 1
     }
   };
@@ -43,6 +50,9 @@ class ActicityComponent extends Component {
     this.setState({ loading: true });
     tableList(this.state.listQuery).then((response) => {
       this.setState({ loading: false });
+
+      console.log('response =>', response );
+
       const list = response.data.data.list;
       const total = response.data.data.total;
       if (this._isMounted) {
@@ -66,6 +76,26 @@ class ActicityComponent extends Component {
       }
     }));
   };
+  filterNickNameChange = (e) => {
+    let value = e.target.value
+    this.setState((state) => ({
+      listQuery: {
+        ...state.listQuery,
+        nickname:value,
+      }
+    }));
+  }
+
+  filterMobileChange = (e) => {
+    let value = e.target.value
+    this.setState((state) => ({
+      listQuery: {
+        ...state.listQuery,
+        mobile:value,
+      }
+    }));
+  }
+
   filterStateChange = (value) => {
     this.setState((state) => ({
       listQuery: {
@@ -102,7 +132,7 @@ class ActicityComponent extends Component {
     );
   };
   handleDelete = (row) => {
-    deleteItem({code:row.code}).then(res => {
+    deleteItem({account_id:row.account_id}).then(res => {
       message.success("删除成功")
       this.fetchData();
     })
@@ -116,7 +146,6 @@ class ActicityComponent extends Component {
   };
   
   handleAdd = () => {
-    console.log('1111');
     this.setState({
       editModalVisible: true,
     });
@@ -161,8 +190,14 @@ class ActicityComponent extends Component {
         <Collapse defaultActiveKey={["1"]}>
           <Panel header="筛选" key="1">
             <Form layout="inline">
-              <Form.Item label="名称:">
+              <Form.Item label="用户名称:">
                 <Input onChange={this.filterNameChange} />
+              </Form.Item>
+              <Form.Item label="用户昵称:">
+                <Input onChange={this.filterNickNameChange} />
+              </Form.Item>
+              <Form.Item label="手机号:">
+                <Input onChange={this.filterMobileChange} />
               </Form.Item>
               <Form.Item label="状态:">
                 <Select
@@ -198,11 +233,14 @@ class ActicityComponent extends Component {
           pagination={false}
         >
           <Column title="序号" dataIndex="id" key="id" width={100} align="center" sorter={(a, b) => a.id - b.id}/>
+          <Column title="用户昵称" dataIndex="nickname" key="nickname" width={100} align="center"/>
           <Column title="名称" dataIndex="name" key="name" width={200} align="center"/>
-          <Column title="活动编码" dataIndex="code" key="code" width={200} align="center"/>
-          <Column title="持续天数" dataIndex="days" key="days" width={150} align="center"/>
-          <Column title="开始时间" dataIndex="start_date" key="start_date" width={195} align="center"/>
-          <Column title="结束时间" dataIndex="end_date" key="end_date" width={195} align="center"/>
+          <Column title="用户唯一code" dataIndex="account_id" key="account_id" width={200} align="center"/>
+          <Column title="微信openid" dataIndex="openid" key="openid" width={200} align="center"/>
+          <Column title="用户生日" dataIndex="birthday" key="birthday" width={195} align="center"/>
+          <Column title="手机号" dataIndex="mobile" key="mobile" width={100} align="center"/>
+          <Column title="座机" dataIndex="phone" key="phone" width={100} align="center"/>
+          <Column title="注册时间" dataIndex="register_time" key="register_time" width={195} align="center"/>
           <Column title="状态" dataIndex="state" key="state" width={195} align="center" render={(state) => {
             let color =
             state === 1 ? "green" : state === 2 ? "red" : "";
@@ -246,4 +284,4 @@ class ActicityComponent extends Component {
   }
 }
 
-export default ActicityComponent;
+export default ItemComponent;

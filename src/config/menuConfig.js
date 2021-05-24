@@ -24,6 +24,12 @@ const menuList = [
     roles:["admin","editor"]
   },
   {
+    title: "用户管理",
+    path: "/item",
+    icon: "menu",
+    roles:["admin","editor"]
+  },
+  {
     title: "组件",
     path: "/components",
     icon: "appstore",

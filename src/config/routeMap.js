@@ -1,7 +1,6 @@
 import Loadable from 'react-loadable';
 import Loading from '@/components/Loading'
 
-
 const Dashboard = Loadable({loader: () => import(/*webpackChunkName:'Dashboard'*/'@/views/dashboard'),loading: Loading});
 const About = Loadable({loader: () => import(/*webpackChunkName:'About'*/'@/views/about'),loading: Loading});
 
@@ -22,9 +21,11 @@ const Zip = Loadable({loader: () => import(/*webpackChunkName:'Zip'*/'@/views/zi
 const Clipboard = Loadable({loader: () => import(/*webpackChunkName:'Clipboard'*/'@/views/clipboard'),loading: Loading});
 
 const Activity = Loadable({loader: () => import(/*webpackChunkName:'Activity'*/'@/views/activity'),loading: Loading});
+const Item = Loadable({loader: () => import(/*webpackChunkName:'Item'*/'@/views/item'),loading: Loading});
 
 export default [
   { path: "/activity", component: Activity, roles: ["admin", "editor"] },
+  { path: "/item", component: Item, roles: ["admin", "editor"] },
 
   { path: "/dashboard", component: Dashboard, roles: ["admin", "editor","guest"] },
   { path: "/about", component: About, roles: ["admin", "editor", "guest"] },

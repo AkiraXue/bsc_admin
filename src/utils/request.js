@@ -1,32 +1,34 @@
 import axios from "axios";
+import qs from 'qs'
 import store from "@/store";
 import { Modal } from "antd";
 import { getToken } from "@/utils/auth";
 import { logout } from "@/store/actions";
 
 const baseUrl = "https://api.akiraxue.com";
+const BearerToken = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKV1RfVE9LRU4iLCJpYXQiOjE2MjE2NzAzMzYsIm5iZiI6MTYyMTY3MDMzNiwiZXhwIjoxNjI0MjYyMzM2LCJhY2NvdW50X2lkIjoiZmY4NWI1YWEwM2EwNDFjZWE5MzFkMTNlMWQ3NGYyNDQiLCJvcGVuaWQiOiJvcGVuaWQgMjIyMiIsInNlc3Npb25fa2V5Ijoic2Vzc2lvbl9rZXkgMzMzMyJ9.c-yXs7Sj6S4enyq3bgLOjMzSIF-mPn8OXeuUtYOzFys)';
 
 //创建一个axios示例
 const service = axios.create({
   //baseURL: process.env.REACT_APP_BASE_API, // api 的 base_url
   baseURL: baseUrl,
   timeout: 5000, // request timeout,
-  method: "POST",
+  method: 'POST',
   headers: {
-    "Access-Control-Allow-Origin": "http://localhost:3000",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET,HEAD,DELETE,PUT",
-    "Access-Control-Allow-Headers": "Access-Control-*, Origin, X-Requested-With, Content-Type, Accept",
-    "Content-Type": "application/json; charset=utf-8",
-    "Access-Control-Max-Age": 300,
-    "Access-Control-Allow-Credentials" : true,
-    "Allow": "OPTIONS,POST,GET,HEAD,DELETE,PUT",
+    // "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Methods": "OPTIONS,POST,GET,HEAD,DELETE,PUT",
+    // "Access-Control-Allow-Headers": "Access-Control-*, Origin, X-Requested-With, Content-Type, Access-Token, Accept",
+    // "Access-Control-Max-Age": 300,
+    // "Access-Control-Allow-Credentials" : true,
+    // "Allow": "OPTIONS,POST,GET,HEAD,DELETE,PUT",
+    "Content-Type": 'application/x-www-form-urlencoded'
   },
-  withCredentials: true,
-  proxy: {
-    host: "http://localhost",
-    port: 3000,
-    protocol: "http"
-  }
+  // withCredentials: true,
+  // proxy: {
+  //   host: "localhost",
+  //   port: 3000,
+  //   protocol: "http"
+  // }
 });
 
 // 请求拦截器
@@ -35,8 +37,12 @@ service.interceptors.request.use(
     // Do something before request is sent
     if (store.getState().user.token) {
       // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
-      config.headers.Authorization = getToken();
+      config.headers.Authorization = BearerToken;
     }
+    if (JSON.stringify(config.data) === '{}') {
+      config.data.is_admin = 1;
+    }
+    config.data = JSON.stringify(config.data) === '{}' ? qs.stringify(config.data) : config.data; // 得到转换后的数据为 string 类型
     return config;
   },
   (error) => {

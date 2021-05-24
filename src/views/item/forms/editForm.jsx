@@ -15,7 +15,9 @@ class EditForm extends Component {
       currentRowData,
     } = this.props;
     const { getFieldDecorator } = form;
-    const { id, name, code, days, start_date, end_date, state} = currentRowData;
+    const {
+      id, name, nickname, account_id, openid, birthday, phone, mobile, state
+    } = currentRowData;
     const formItemLayout = {
       labelCol: {
         sm: { span: 4 },
@@ -42,38 +44,58 @@ class EditForm extends Component {
             </Form.Item>
             : ''
           }
-          <Form.Item label="标题:">
+          <Form.Item label="昵称:">
+            {getFieldDecorator("nickname", {
+              rules: [{ required: true, message: "请输入昵称!" }],
+              initialValue: nickname?nickname:'',
+            })(<Input disabled />)}
+          </Form.Item>
+          <Form.Item label="名称:">
             {getFieldDecorator("name", {
-              rules: [{ required: true, message: "请输入标题!" }],
+              rules: [{ required: true, message: "请输入名称!" }],
               initialValue: name?name:'',
-            })(<Input placeholder="标题" />)}
+            })(<Input placeholder="名称" />)}
           </Form.Item>
           {
-            code ?
-            <Form.Item label="活动编号:">
-              {getFieldDecorator("code", {
-                initialValue: code ? code:'',
+            account_id ?
+            <Form.Item label="用户唯一id:">
+              {getFieldDecorator("account_id", {
+                initialValue: account_id ? account_id:'',
               })(<Input disabled />)}
             </Form.Item>
             : ''
           }
-          <Form.Item label="活动天数:">
-            {getFieldDecorator("days", {
-              initialValue: days?days:0,
-            })(<Input placeholder="活动天数" />)}
+          {
+            openid ?
+            <Form.Item label="用户微信唯一id:">
+              {getFieldDecorator("openid", {
+                initialValue: openid ? openid:'',
+              })(<Input disabled />)}
+            </Form.Item>
+            : ''
+          }
+        
+          <Form.Item label="手机:">
+            {getFieldDecorator("mobile", {
+              rules: [{ required: true, message: "请输入手机!" }],
+              initialValue: mobile?mobile:'',
+            })(<Input placeholder="手机" />)}
           </Form.Item>
-          <Form.Item label="起始时间:">
-            {getFieldDecorator("start_date", {
+
+          <Form.Item label="座机:">
+            {getFieldDecorator("phone", {
+              rules: [{ required: true, message: "请输入座机!" }],
+              initialValue: phone?phone:'',
+            })(<Input placeholder="座机" />)}
+          </Form.Item>
+
+          <Form.Item label="生日:">
+            {getFieldDecorator("birthday", {
               rules: [{ type: 'object', required: true, message: '请选择时间!' }],
-              initialValue: moment(start_date ? start_date : currentDate || "YYYY-MM-DD"),
+              initialValue: moment(birthday ? birthday : currentDate|| "YYYY-MM-DD"),
             })(<DatePicker showTime format="YYYY-MM-DD" />)}
           </Form.Item>
-          <Form.Item label="截止时间:">
-            {getFieldDecorator("end_date", {
-              rules: [{ type: 'object', required: true, message: '请选择时间!' }],
-              initialValue: moment(end_date ? end_date : currentDate|| "YYYY-MM-DD"),
-            })(<DatePicker showTime format="YYYY-MM-DD" />)}
-          </Form.Item>
+
           <Form.Item label="状态:">
             {getFieldDecorator("state", {
               initialValue: state ? state : "开启",
@@ -84,16 +106,6 @@ class EditForm extends Component {
               </Select>
             )}
           </Form.Item>
-
-          {
-            /* 
-            <Form.Item label="推荐指数:">
-              {getFieldDecorator("star", {
-                initialValue: star.length,
-              })(<Rate count={3} />)}
-            </Form.Item> 
-            */
-          }
         </Form>
       </Modal>
     );

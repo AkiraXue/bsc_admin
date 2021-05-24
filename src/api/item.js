@@ -1,7 +1,8 @@
 import request from '@/utils/request'
+
 export function tableList(data) {
   return request({
-    url: '/activity/find',
+    url: '/userInfo/find',
     method: 'POST',
     data
   })
@@ -9,7 +10,7 @@ export function tableList(data) {
 
 export function deleteItem(data) {
   return request({
-    url: '/activity/toggle',
+    url: '/userInfo/toggle',
     method: 'POST',
     data
   })
@@ -17,7 +18,7 @@ export function deleteItem(data) {
 
 export function editItem(data) {
   return request({
-    url: '/activity/save',
+    url: '/userInfo/save',
     method: 'POST',
     data
   })
